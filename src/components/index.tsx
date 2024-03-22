@@ -33,9 +33,9 @@ export const QrCode = () => {
           onChange={(e) => setText(e.target.value)}
         />
       </div>
-      <Button 
-        // style={{marginTop: '12px'}} 
-        block 
+      <Button
+        // style={{marginTop: '12px'}}
+        block
         onClick={onGenBtnClick}
       >
         Create QR Code
@@ -92,7 +92,12 @@ const ItemView = (props: {
   };
 
   return (
-    <div className="feature-view" key={index}>
+    <div
+      className="feature-view"
+      key={index}
+      onMouseEnter={() => setEditIconVisible(true)}
+      onMouseLeave={() => setEditIconVisible(false)}
+    >
       <QRCode value={item.url} size={256} />
       <div className="feature-info">
         <div
@@ -100,15 +105,9 @@ const ItemView = (props: {
           // style={{ color: isDark ? "#ffffffd9" : "" }}
         >
           {!isInputing && (
-            <p
-              onMouseEnter={() => setEditIconVisible(true)}
-              onMouseLeave={() => setEditIconVisible(false)}
-              className="qrcode-name"
-              onClick={onNameClick}
-            >
+            <p className="qrcode-name" onClick={onNameClick}>
               {name ? name : "QR Name"}
-              {/* {editIconVisible && <EditOutlined />} */}
-              <EditOutlined />
+              {editIconVisible && <EditOutlined />}
             </p>
           )}
           {isInputing && (
@@ -120,16 +119,16 @@ const ItemView = (props: {
               placeholder="Please input QR name, press enter to save"
               suffix={<EnterOutlined />}
               className="qrcode-input"
-              style={{
-                // background: isDark ? "#1f1f1f" : "white",
-                // color: isDark ? "#dddddd" : "rgba(0,0,0,.9)",
-              }}
+              style={
+                {
+                  // background: isDark ? "#1f1f1f" : "white",
+                  // color: isDark ? "#dddddd" : "rgba(0,0,0,.9)",
+                }
+              }
             />
           )}
-          <div className={styles.description}>
-            <p>
-              {item.url}
-            </p>
+          <div className={styles.description} style={{ marginTop: "4px" }}>
+            <p>{item.url}</p>
           </div>
         </div>
         <div>
