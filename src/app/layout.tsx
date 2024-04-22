@@ -8,6 +8,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "History QR Code – create QR codes for free",
+  keywords: "history qr code, qr code",
   description:
     "History QR Code – create QR codes for free，save the previously generated QR code",
 };
