@@ -50,7 +50,7 @@ export const QrCode = () => {
         <p><strong>如何使用二维码生成器：</strong></p>
         <ol>
           <li>在输入框中输入URL或文本</li>
-          <li>点击"Create QR Code"按钮生成二维码</li>
+          <li>点击Create QR Code按钮生成二维码</li>
           <li>生成的二维码将显示在下方</li>
           <li>点击二维码可查看更大尺寸</li>
           <li>您可以重命名、删除、复制或下载您的二维码</li>
