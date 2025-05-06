@@ -157,9 +157,10 @@ const ItemView = (props: {
         footer={null}
         width="100%"
         style={{ top: 0, maxWidth: "100vw" }}
-        bodyStyle={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}
+        bodyStyle={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}
       >
         <QRCode value={item.url} size={500} />
+        <p style={{ marginTop: '20px', wordBreak: 'break-all', textAlign: 'center' }}>{item.url}</p>
       </Modal>
 
       <div className="feature-info">
