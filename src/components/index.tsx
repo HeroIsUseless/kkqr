@@ -7,11 +7,12 @@ import {
   message,
   Statistic,
   Typography,
+  Modal,
 } from "antd";
 import "./index.css";
 import { loadFromLocalStore, saveToLocalStore } from "./localStore";
 import { Res, changeOneResName, useHooks } from "./useHooks";
-import { EditOutlined, EnterOutlined } from "@ant-design/icons";
+import { EditOutlined, EnterOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import styles from "../app/page.module.css";
 const { Title, Link } = Typography;
 React.version;
@@ -21,8 +22,44 @@ const { TextArea } = Input;
 export const QrCode = () => {
   const { text, setText, ress, setRess, bottomDivRef, onGenBtnClick } =
     useHooks();
+  const [helpModalVisible, setHelpModalVisible] = React.useState(false);
 
-  return (
+  const showHelpModal = () => {
+    setHelpModalVisible(true);
+  };
+
+  const handleHelpModalClose = () => {
+    setHelpModalVisible(false);
+  };
+
+  return (<>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+      <h1>History QR Code</h1>
+      <QuestionCircleOutlined 
+        style={{ fontSize: '20px', cursor: 'pointer' }} 
+        onClick={showHelpModal} 
+      />
+    </div>
+    <Modal
+      title="二维码生成器使用帮助"
+      open={helpModalVisible}
+      onCancel={handleHelpModalClose}
+      footer={null}
+    >
+      <div style={{ padding: '20px' }}>
+        <p><strong>如何使用二维码生成器：</strong></p>
+        <ol>
+          <li>在输入框中输入URL或文本</li>
+          <li>点击"Create QR Code"按钮生成二维码</li>
+          <li>生成的二维码将显示在下方</li>
+          <li>点击二维码可查看更大尺寸</li>
+          <li>您可以重命名、删除、复制或下载您的二维码</li>
+          <li>所有二维码都保存在浏览器本地，下次访问时仍然可用。</li>
+        </ol>
+        <p>v1.0.0</p>
+      </div>
+    </Modal>
+    <br />
     <div className="fragment">
       <div className="top-view">
         <TextArea
@@ -56,6 +93,7 @@ export const QrCode = () => {
           })}
       </div>
     </div>
+  </>
   );
 };
 
@@ -70,8 +108,18 @@ const ItemView = (props: {
   const [isInputing, setIsInputing] = React.useState(false);
   const [name, setName] = React.useState(item.name);
   const [editIconVisible, setEditIconVisible] = React.useState(false);
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+
   const onNameClick = () => {
     setIsInputing(true);
+  };
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
   };
 
   const onPressEnter = (e: any) => {
@@ -98,11 +146,26 @@ const ItemView = (props: {
       onMouseEnter={() => setEditIconVisible(true)}
       onMouseLeave={() => setEditIconVisible(false)}
     >
-      <QRCode value={item.url} size={256} />
+      <div onClick={showModal} style={{ cursor: 'pointer' }}>
+        <QRCode value={item.url} size={256} />
+      </div>
+
+      <Modal
+        title={name || "QR Code"}
+        open={isModalOpen}
+        onCancel={handleModalClose}
+        footer={null}
+        width="100%"
+        style={{ top: 0, maxWidth: "100vw" }}
+        bodyStyle={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}
+      >
+        <QRCode value={item.url} size={500} />
+      </Modal>
+
       <div className="feature-info">
         <div
           className="feature-info-link"
-          // style={{ color: isDark ? "#ffffffd9" : "" }}
+        // style={{ color: isDark ? "#ffffffd9" : "" }}
         >
           {!isInputing && (
             <p className="qrcode-name" onClick={onNameClick}>
