@@ -11,6 +11,18 @@ export const metadata: Metadata = {
   keywords: "history qr code, qr code",
   description:
     "History QR Code – create QR codes for free，save the previously generated QR code",
+  manifest: "/manifest.json",
+  themeColor: "#000000",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "History QR Code",
+  },
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+  },
 };
 
 export default function RootLayout({
@@ -20,6 +32,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="apple-touch-icon" href="/icon-192x192.png" />
+      </head>
       <body className={inter.className}>
         <AntdRegistry>{children}</AntdRegistry>
         <Analytics />
