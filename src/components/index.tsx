@@ -251,6 +251,10 @@ const ItemView = (props: {
         style={{
           cursor: "pointer",
           position: "relative",
+          borderRadius: "12px",
+          padding: "8px",
+          backgroundColor: "#ffffff",
+          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
         }}
       >
         <div
@@ -267,12 +271,6 @@ const ItemView = (props: {
             fgColor="#000000"
             level="H"
             marginSize={2}
-            style={{
-              borderRadius: "12px",
-              padding: "8px",
-              backgroundColor: "#ffffff",
-              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-            }}
           />
         </div>
       </div>
