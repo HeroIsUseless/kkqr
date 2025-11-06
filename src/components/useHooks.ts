@@ -3,12 +3,37 @@ import {
   loadFromLocalStore,
   saveToLocalStore,
 } from './localStore';
-import { message } from 'antd';
+
+// 简单的toast通知函数
+export const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+  const toast = document.createElement('div');
+  toast.textContent = message;
+  toast.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 24px;
+    background: ${type === 'success' ? '#10b981' : '#ef4444'};
+    color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+    animation: slideIn 0.3s ease-out;
+  `;
+  
+  document.body.appendChild(toast);
+  
+  setTimeout(() => {
+    toast.style.animation = 'slideOut 0.3s ease-out';
+    setTimeout(() => document.body.removeChild(toast), 300);
+  }, 2000);
+};
+
 export interface Res {
   id: string;
   url: string;
   time: string;
-  name: string; // 生成二维码的自定义名字，如果为空则为“生成链接”
+  name: string; // 生成二维码的自定义名字，如果为空则为"生成链接"
 }
 let bottomTimer: any;
 export const changeOneResName = (id: string, name: string) => {
@@ -73,7 +98,7 @@ export function useHooks () {
 
   const onGenBtnClick = () => {
     if (!text) {
-      message.error('Link must be not null');
+      showToast('Link must be not null', 'error');
       return;
     }
     let newRess = [

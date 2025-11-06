@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
-import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 
@@ -37,7 +36,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icon-192x192.png" />
       </head>
       <body className={inter.className}>
-        <AntdRegistry>{children}</AntdRegistry>
+        {children}
         <Analytics />
       </body>
     </html>

@@ -1,110 +1,166 @@
-import React, { useEffect } from "react";
-import {
-  Button,
-  Input,
-  QRCode,
-  Space,
-  message,
-  Statistic,
-  Typography,
-  Modal,
-} from "antd";
+"use client";
+import React from "react";
+import { Dialog, Transition } from "@headlessui/react";
+import { QRCodeSVG } from "qrcode.react";
 import "./index.css";
 import { loadFromLocalStore, saveToLocalStore } from "./localStore";
-import { Res, changeOneResName, useHooks } from "./useHooks";
-import { EditOutlined, EnterOutlined, QuestionCircleOutlined } from "@ant-design/icons";
+import { Res, changeOneResName, useHooks, showToast } from "./useHooks";
 import styles from "../app/page.module.css";
-const { Title, Link } = Typography;
-React.version;
-const { TextArea } = Input;
 
-// 生成二维码模块
 export const QrCode = () => {
   const { text, setText, ress, setRess, bottomDivRef, onGenBtnClick } =
     useHooks();
   const [helpModalVisible, setHelpModalVisible] = React.useState(false);
 
-  const showHelpModal = () => {
-    setHelpModalVisible(true);
-  };
-
-  const handleHelpModalClose = () => {
-    setHelpModalVisible(false);
-  };
-
-  return (<>
-    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-      <h1>History QR Code</h1>
-      <QuestionCircleOutlined 
-        style={{ fontSize: '20px', cursor: 'pointer' }} 
-        onClick={showHelpModal} 
-      />
-    </div>
-    <Modal
-      title="二维码生成器使用帮助"
-      open={helpModalVisible}
-      onCancel={handleHelpModalClose}
-      footer={null}
-    >
-      <div style={{ padding: '20px' }}>
-        <p><strong>如何使用二维码生成器：</strong></p>
-        <ol>
-          <li>在输入框中输入URL或文本</li>
-          <li>点击Create QR Code按钮生成二维码</li>
-          <li>生成的二维码将显示在下方</li>
-          <li>点击二维码可查看更大尺寸</li>
-          <li>您可以重命名、删除、复制或下载您的二维码</li>
-          <li>所有二维码都保存在浏览器本地，下次访问时仍然可用。</li>
-        </ol>
-        <p>v1.0.1</p>
-      </div>
-    </Modal>
-    <br />
-    <div className="fragment">
-      <div className="top-view" style={{ display: 'flex', gap: '12px' }}>
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px', minHeight: '256px' }}>
-          <TextArea
-            rows={4}
-            placeholder="Please input QR link"
-            maxLength={1000}
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            style={{ flex: 1 }}
-          />
-          <Button
-            onClick={onGenBtnClick}
+  return (
+    <>
+      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        <h1>History QR Code</h1>
+        <button
+          onClick={() => setHelpModalVisible(true)}
+          className="icon-button"
+          aria-label="Help"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="w-6"
           >
-            Create QR Code
-          </Button>
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"
+            />
+          </svg>
+        </button>
+      </div>
+
+      <Transition appear show={helpModalVisible} as={React.Fragment}>
+        <Dialog
+          as="div"
+          className="modal-overlay"
+          onClose={() => setHelpModalVisible(false)}
+        >
+          <Transition.Child
+            as={React.Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="modal-backdrop" />
+          </Transition.Child>
+
+          <div className="modal-container">
+            <div className="modal-inner">
+              <Transition.Child
+                as={React.Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className="modal-panel">
+                  <Dialog.Title as="h3" className="modal-title">
+                    二维码生成器使用帮助
+                  </Dialog.Title>
+                  <div className="modal-content">
+                    <p>
+                      <strong>如何使用二维码生成器：</strong>
+                    </p>
+                    <ol>
+                      <li>在输入框中输入URL或文本</li>
+                      <li>点击Create QR Code按钮生成二维码</li>
+                      <li>生成的二维码将显示在下方</li>
+                      <li>点击二维码可查看更大尺寸</li>
+                      <li>您可以重命名、删除、复制或下载您的二维码</li>
+                      <li>
+                        所有二维码都保存在浏览器本地，下次访问时仍然可用。
+                      </li>
+                    </ol>
+                    <p>v1.0.1</p>
+                  </div>
+                  <div className="modal-footer">
+                    <button
+                      type="button"
+                      className="button button-secondary"
+                      onClick={() => setHelpModalVisible(false)}
+                    >
+                      关闭
+                    </button>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
+
+      <br />
+      <div className="fragment">
+        <div className="top-view" style={{ display: "flex", gap: "12px" }}>
+          <div
+            style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              gap: "8px",
+              minHeight: "256px",
+            }}
+          >
+            <textarea
+              rows={10}
+              placeholder="Please input QR link"
+              maxLength={1000}
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              className="textarea"
+              style={{ flex: 1 }}
+            />
+            <button onClick={onGenBtnClick} className="button button-primary">
+              Create QR Code
+            </button>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              minWidth: "256px",
+            }}
+          >
+            {text && <QRCodeSVG value={text} size={256} />}
+          </div>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '256px' }}>
-          {text && <QRCode value={text} size={256} />}
+        <div ref={bottomDivRef} className="bottom-view">
+          {ress.length > 0 &&
+            ress.map((item, index) => {
+              return (
+                <ItemView
+                  item={item}
+                  key={item.id}
+                  index={index}
+                  ress={ress}
+                  setRess={setRess}
+                />
+              );
+            })}
         </div>
       </div>
-      <div ref={bottomDivRef} className="bottom-view">
-        {ress.length > 0 &&
-          ress.map((item, index) => {
-            return (
-              <ItemView
-                item={item}
-                key={item.id}
-                index={index}
-                // isDark={appConfig.isDark}
-                ress={ress}
-                setRess={setRess}
-              />
-            );
-          })}
-      </div>
-    </div>
-  </>
+    </>
   );
 };
 
 const ItemView = (props: {
   item: Res;
   index: number;
-  // isDark: boolean;
   ress: Res[];
   setRess: Function;
 }) => {
@@ -114,27 +170,17 @@ const ItemView = (props: {
   const [editIconVisible, setEditIconVisible] = React.useState(false);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
-  const onNameClick = () => {
-    setIsInputing(true);
-  };
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleModalClose = () => {
-    setIsModalOpen(false);
-  };
-
-  const onPressEnter = (e: any) => {
-    let inputText = e.target.value;
-    if (!inputText) {
-      inputText = "";
+  const onPressEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      let inputText = (e.target as HTMLInputElement).value;
+      if (!inputText) {
+        inputText = "";
+      }
+      setEditIconVisible(false);
+      setName(inputText || name);
+      changeOneResName(item.id, inputText);
+      setIsInputing(false);
     }
-    setEditIconVisible(false);
-    setName(inputText || name);
-    changeOneResName(item.id, inputText);
-    setIsInputing(false);
   };
 
   const onDelBtnClick = () => {
@@ -146,23 +192,35 @@ const ItemView = (props: {
   const onCopyBtnClick = async () => {
     try {
       await navigator.clipboard.writeText(item.url);
-      message.success('Link copied to clipboard');
+      showToast("Link copied to clipboard", "success");
     } catch (error) {
-      message.error('Failed to copy link');
+      showToast("Failed to copy link", "error");
     }
   };
 
   const onDownloadBtnClick = () => {
-    const canvas = document.querySelector(`#qrcode-${item.id} canvas`) as HTMLCanvasElement;
-    if (canvas) {
-      const url = canvas.toDataURL('image/png');
-      const link = document.createElement('a');
-      link.download = `${name || 'qrcode'}-${item.id}.png`;
-      link.href = url;
-      link.click();
-      message.success('QR Code downloaded');
+    const svg = document.querySelector(
+      `#qrcode-${item.id} svg`
+    ) as SVGElement;
+    if (svg) {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      const svgData = new XMLSerializer().serializeToString(svg);
+      const img = new Image();
+      img.onload = () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx?.drawImage(img, 0, 0);
+        const url = canvas.toDataURL("image/png");
+        const link = document.createElement("a");
+        link.download = `${name || "qrcode"}-${item.id}.png`;
+        link.href = url;
+        link.click();
+        showToast("QR Code downloaded", "success");
+      };
+      img.src = "data:image/svg+xml;base64," + btoa(svgData);
     } else {
-      message.error('Failed to download QR Code');
+      showToast("Failed to download QR Code", "error");
     }
   };
 
@@ -173,101 +231,132 @@ const ItemView = (props: {
       onMouseEnter={() => setEditIconVisible(true)}
       onMouseLeave={() => setEditIconVisible(false)}
     >
-      <div 
-        onClick={showModal} 
-        style={{ 
-          cursor: 'pointer',
-          position: 'relative'
+      <div
+        onClick={() => setIsModalOpen(true)}
+        style={{
+          cursor: "pointer",
+          position: "relative",
         }}
       >
-        <div 
+        <div
           id={`qrcode-${item.id}`}
           style={{
-            filter: editIconVisible ? 'none' : 'blur(9px)',
-            transition: 'filter 0.3s ease'
+            filter: editIconVisible ? "none" : "blur(9px)",
+            transition: "filter 0.3s ease",
           }}
         >
-          <QRCode value={item.url} size={256} />
+          <QRCodeSVG value={item.url} size={256} />
         </div>
       </div>
 
-      <Modal
-        title={name || "QR Code"}
-        open={isModalOpen}
-        onCancel={handleModalClose}
-        footer={null}
-        width="100%"
-        style={{ top: 0, maxWidth: "100vw" }}
-        bodyStyle={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}
-      >
-        <QRCode value={item.url} size={500} />
-        <p style={{ marginTop: '20px', wordBreak: 'break-all', textAlign: 'center' }}>{item.url}</p>
-      </Modal>
+      <Transition appear show={isModalOpen} as={React.Fragment}>
+        <Dialog
+          as="div"
+          className="modal-overlay"
+          onClose={() => setIsModalOpen(false)}
+        >
+          <Transition.Child
+            as={React.Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="modal-backdrop" />
+          </Transition.Child>
+
+          <div className="modal-container modal-fullscreen">
+            <div className="modal-inner">
+              <Transition.Child
+                as={React.Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className="modal-panel modal-panel-fullscreen">
+                  <Dialog.Title as="h3" className="modal-title">
+                    {name || "QR Code"}
+                  </Dialog.Title>
+                  <div className="modal-content modal-content-center">
+                    <QRCodeSVG value={item.url} size={500} />
+                    <p
+                      style={{
+                        marginTop: "20px",
+                        wordBreak: "break-all",
+                        textAlign: "center",
+                      }}
+                    >
+                      {item.url}
+                    </p>
+                  </div>
+                  <div className="modal-footer">
+                    <button
+                      type="button"
+                      className="button button-secondary"
+                      onClick={() => setIsModalOpen(false)}
+                    >
+                      关闭
+                    </button>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
 
       <div className="feature-info">
-        <div
-          className="feature-info-link"
-        // style={{ color: isDark ? "#ffffffd9" : "" }}
-        >
+        <div className="feature-info-link">
           {!isInputing && (
-            <p className="qrcode-name" onClick={onNameClick}>
+            <p className="qrcode-name" onClick={() => setIsInputing(true)}>
               {name ? name : "QR Name"}
-              {editIconVisible && <EditOutlined />}
+              {editIconVisible && (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="inline-icon"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+                  />
+                </svg>
+              )}
             </p>
           )}
           {isInputing && (
-            <Input
-              size="small"
-              onPressEnter={onPressEnter}
+            <input
+              type="text"
+              onKeyDown={onPressEnter}
               defaultValue={name}
               autoFocus={true}
               placeholder="Please input QR name, press enter to save"
-              suffix={<EnterOutlined />}
-              className="qrcode-input"
-              style={
-                {
-                  // background: isDark ? "#1f1f1f" : "white",
-                  // color: isDark ? "#dddddd" : "rgba(0,0,0,.9)",
-                }
-              }
+              className="input qrcode-input"
             />
           )}
           <div className={styles.description} style={{ marginTop: "4px" }}>
             <p>{item.url}</p>
           </div>
         </div>
-        <div>
-          <Button
-            style={{ fontSize: "12px" }}
-            size="small"
-            onClick={onDelBtnClick}
-          >
+        <div className="button-group">
+          <button className="button button-small" onClick={onDelBtnClick}>
             Delete
-          </Button>
-          {/* &nbsp;
-          <Button style={{ fontSize: "12px" }} size="small">
-            编辑
-          </Button> */}
-          &nbsp;
-          <Button 
-            style={{ fontSize: "12px" }} 
-            size="small"
-            onClick={onCopyBtnClick}
-          >
+          </button>
+          <button className="button button-small" onClick={onCopyBtnClick}>
             Copy
-          </Button>
-          &nbsp;
-          <Button 
-            style={{ fontSize: "12px" }} 
-            size="small"
-            onClick={onDownloadBtnClick}
-          >
+          </button>
+          <button className="button button-small" onClick={onDownloadBtnClick}>
             Download
-          </Button>
-          {/* &nbsp;
-          <Button style={{ fontSize: "12px" }} size="small">
-            分析
-          </Button> */}
+          </button>
         </div>
         <div className="feature-info-time">create at {item.time}</div>
       </div>
