@@ -136,7 +136,22 @@ export const QrCode = () => {
               minWidth: "256px",
             }}
           >
-            {text && <QRCodeSVG value={text} size={256} />}
+            {text && (
+              <QRCodeSVG
+                value={text}
+                size={256}
+                bgColor="#ffffff"
+                fgColor="#000000"
+                level="H"
+                marginSize={2}
+                style={{
+                  borderRadius: "12px",
+                  padding: "8px",
+                  backgroundColor: "#ffffff",
+                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                }}
+              />
+            )}
           </div>
         </div>
         <div ref={bottomDivRef} className="bottom-view">
@@ -245,7 +260,20 @@ const ItemView = (props: {
             transition: "filter 0.3s ease",
           }}
         >
-          <QRCodeSVG value={item.url} size={256} />
+          <QRCodeSVG
+            value={item.url}
+            size={256}
+            bgColor="#ffffff"
+            fgColor="#000000"
+            level="H"
+            marginSize={2}
+            style={{
+              borderRadius: "12px",
+              padding: "8px",
+              backgroundColor: "#ffffff",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            }}
+          />
         </div>
       </div>
 
@@ -283,7 +311,20 @@ const ItemView = (props: {
                     {name || "QR Code"}
                   </Dialog.Title>
                   <div className="modal-content modal-content-center">
-                    <QRCodeSVG value={item.url} size={500} />
+                    <QRCodeSVG
+                      value={item.url}
+                      size={500}
+                      bgColor="#ffffff"
+                      fgColor="#000000"
+                      level="H"
+                      marginSize={2}
+                      style={{
+                        borderRadius: "16px",
+                        padding: "24px",
+                        backgroundColor: "#ffffff",
+                        boxShadow: "0 8px 16px rgba(0, 0, 0, 0.15)",
+                      }}
+                    />
                     <p
                       style={{
                         marginTop: "20px",
