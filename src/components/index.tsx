@@ -56,27 +56,31 @@ export const QrCode = () => {
           <li>您可以重命名、删除、复制或下载您的二维码</li>
           <li>所有二维码都保存在浏览器本地，下次访问时仍然可用。</li>
         </ol>
-        <p>v1.0.0</p>
+        <p>v1.0.1</p>
       </div>
     </Modal>
     <br />
     <div className="fragment">
-      <div className="top-view">
-        <TextArea
-          rows={4}
-          placeholder="Please input QR link"
-          maxLength={1000}
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-        />
+      <div className="top-view" style={{ display: 'flex', gap: '12px' }}>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px', minHeight: '256px' }}>
+          <TextArea
+            rows={4}
+            placeholder="Please input QR link"
+            maxLength={1000}
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            style={{ flex: 1 }}
+          />
+          <Button
+            onClick={onGenBtnClick}
+          >
+            Create QR Code
+          </Button>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '256px' }}>
+          {text && <QRCode value={text} size={256} />}
+        </div>
       </div>
-      <Button
-        // style={{marginTop: '12px'}}
-        block
-        onClick={onGenBtnClick}
-      >
-        Create QR Code
-      </Button>
       <div ref={bottomDivRef} className="bottom-view">
         {ress.length > 0 &&
           ress.map((item, index) => {
@@ -139,6 +143,29 @@ const ItemView = (props: {
     saveToLocalStore("fragment-qrcode-res", JSON.stringify(newRess));
   };
 
+  const onCopyBtnClick = async () => {
+    try {
+      await navigator.clipboard.writeText(item.url);
+      message.success('Link copied to clipboard');
+    } catch (error) {
+      message.error('Failed to copy link');
+    }
+  };
+
+  const onDownloadBtnClick = () => {
+    const canvas = document.querySelector(`#qrcode-${item.id} canvas`) as HTMLCanvasElement;
+    if (canvas) {
+      const url = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.download = `${name || 'qrcode'}-${item.id}.png`;
+      link.href = url;
+      link.click();
+      message.success('QR Code downloaded');
+    } else {
+      message.error('Failed to download QR Code');
+    }
+  };
+
   return (
     <div
       className="feature-view"
@@ -146,8 +173,22 @@ const ItemView = (props: {
       onMouseEnter={() => setEditIconVisible(true)}
       onMouseLeave={() => setEditIconVisible(false)}
     >
-      <div onClick={showModal} style={{ cursor: 'pointer' }}>
-        <QRCode value={item.url} size={256} />
+      <div 
+        onClick={showModal} 
+        style={{ 
+          cursor: 'pointer',
+          position: 'relative'
+        }}
+      >
+        <div 
+          id={`qrcode-${item.id}`}
+          style={{
+            filter: editIconVisible ? 'none' : 'blur(9px)',
+            transition: 'filter 0.3s ease'
+          }}
+        >
+          <QRCode value={item.url} size={256} />
+        </div>
       </div>
 
       <Modal
@@ -208,11 +249,19 @@ const ItemView = (props: {
             编辑
           </Button> */}
           &nbsp;
-          <Button style={{ fontSize: "12px" }} size="small">
+          <Button 
+            style={{ fontSize: "12px" }} 
+            size="small"
+            onClick={onCopyBtnClick}
+          >
             Copy
           </Button>
           &nbsp;
-          <Button style={{ fontSize: "12px" }} size="small">
+          <Button 
+            style={{ fontSize: "12px" }} 
+            size="small"
+            onClick={onDownloadBtnClick}
+          >
             Download
           </Button>
           {/* &nbsp;
